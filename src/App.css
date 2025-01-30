@@ -140,7 +140,11 @@ th {
   width: 100%;
   max-width: 120px;
 }
-
+.error-header{
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
 .save-btn {
   background-color: #28a745;
   color: white;

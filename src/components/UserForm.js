@@ -8,13 +8,43 @@ const UserForm = ({ user, onSubmit, onCancel }) => {
     company: user ? user.company.name : "",
   });
 
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    let newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    } else if (formData.name.length < 3) {
+      newErrors.name = "Name must be at least 3 characters";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = "Invalid email format";
+    }
+
+    if (!formData.company.trim()) {
+      newErrors.company = "Department is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    if (validate()) {
+      alert("User information saved successfully!");
+      onSubmit(formData);
+    } else {
+      alert("Please fix the errors before submitting.");
+    }
   };
 
   return (
@@ -31,7 +61,11 @@ const UserForm = ({ user, onSubmit, onCancel }) => {
               onChange={handleChange}
               required
             />
+            <span className="error-header">
+              {errors.name && <p className="error">{errors.name}</p>}
+            </span>
           </div>
+
           <div className="form-group">
             <label>Email</label>
             <input
@@ -41,7 +75,11 @@ const UserForm = ({ user, onSubmit, onCancel }) => {
               onChange={handleChange}
               required
             />
+            <span className="error-header">
+              {errors.email && <p className="error">{errors.email}</p>}
+            </span>
           </div>
+
           <div className="form-group">
             <label>Department</label>
             <input
@@ -51,7 +89,11 @@ const UserForm = ({ user, onSubmit, onCancel }) => {
               onChange={handleChange}
               required
             />
+            <span className="error-header">
+              {errors.company && <p className="error">{errors.company}</p>}
+            </span>
           </div>
+
           <div className="form-actions">
             <button type="submit" className="save-btn">
               Save
